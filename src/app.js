@@ -4,7 +4,9 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import authRoutes from './routes/auth.routes.js';
 import healthRoutes from './routes/health.routes.js';
+import { errorHandler } from './middleware/error.middleware.js';
 
 const app = express();
 
@@ -27,6 +29,7 @@ app.get('/', (request, response) => {
 });
 
 app.use('/api/v1/health', healthRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 app.use((request, response) => {
   response.status(404).json({
@@ -34,5 +37,7 @@ app.use((request, response) => {
     message: `Route not found: ${request.method} ${request.originalUrl}`,
   });
 });
+
+app.use(errorHandler);
 
 export default app;
